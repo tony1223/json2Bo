@@ -1,0 +1,194 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=BIG5">
+		<title>JSON to Java/MongoDB BasicObject converter </title>
+	</head>
+	<body>
+
+		<h1>Simple JavaScript object to Java MongoDB BasicObject Converter</h1>
+		<h2>A code generator to save my life.</h2>
+		<textarea id="test" style="width:100%;" rows="10">{ $and:[ {tags: {$ne:"hello"}}, {tags:"world"} ] };</textarea>
+		<button id="btn">Convert</button>
+		<textarea id="output" style="width:100%;" rows="20">
+		</textarea>
+
+		<hr />
+		Still very raw version,welcome to contribute or fork at the <a href="https://github.com/tony1223/json2Bo" target="_blank">github project</a>.<br />
+		Here we convert json to Java code,but you might want to use another approach like <a href="http://www.mkyong.com/mongodb/java-mongodb-convert-json-data-to-dbobject/" target="_blank">this</a>.
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=BIG5">
+		<title>JSON to Java/MongoDB BasicObject converter </title>
+	</head>
+	<body>
+
+		<h1>Simple JavaScript object to Java MongoDB BasicObject Converter</h1>
+		<h2>A code generator to save my life.</h2>
+		<textarea id="test" style="width:100%;" rows="10">{ $and:[ {tags: {$ne:"hello"}}, {tags:"world"} ] };</textarea>
+		<button id="btn">Convert</button>
+		<textarea id="output" style="width:100%;" rows="20">
+		</textarea>
+
+		<hr />
+		Still very raw version,welcome to contribute or fork at the <a href="https://github.com/tony1223/json2Bo" target="_blank">github project</a>.<br />
+		Here we convert json to Java code,but you might want to use another approach like <a href="http://www.mkyong.com/mongodb/java-mongodb-convert-json-data-to-dbobject/" target="_blank">this</a>.
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=BIG5">
+		<title>JSON to Java/MongoDB BasicObject converter </title>
+	</head>
+	<body>
+
+		<h1>Simple JavaScript object to Java MongoDB BasicObject Converter</h1>
+		<h2>A code generator to save my life.</h2>
+		<textarea id="test" style="width:100%;" rows="10">{ $and:[ {tags: {$ne:"hello"}}, {tags:"world"} ] };</textarea>
+		<button id="btn">Convert</button>
+		<textarea id="output" style="width:100%;" rows="20">
+		</textarea>
+
+		<hr />
+		Still very raw version,welcome to contribute or fork at the <a href="https://github.com/tony1223/json2Bo" target="_blank">github project</a>.<br />
+		Here we convert json to Java code,but you might want to use another approach like <a href="http://www.mkyong.com/mongodb/java-mongodb-convert-json-data-to-dbobject/" target="_blank">this</a>.
+		<br />
+		Made by TonyQ,#Taiwan
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=BIG5">
+		<title>JSON to Java/MongoDB BasicObject converter </title>
+	</head>
+	<body>
+
+		<h1>Simple JavaScript object to Java MongoDB BasicObject Converter</h1>
+		<h2>A code generator to save my life.</h2>
+		<textarea id="test" style="width:100%;" rows="10">{ $and:[ {tags: {$ne:"hello"}}, {tags:"world"} ] };</textarea>
+		<button id="btn">Convert</button>
+		<textarea id="output" style="width:100%;" rows="20">
+		</textarea>
+
+		<hr />
+		Still very raw version,welcome to contribute or fork at the <a href="https://github.com/tony1223/json2Bo" target="_blank">github project</a>.<br />
+		Here we convert json to Java code,but you might want to use another approach like <a href="http://www.mkyong.com/mongodb/java-mongodb-convert-json-data-to-dbobject/" target="_blank">this</a>.
+		<br />
+		Made by TonyQ,#Taiwan
+
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script>
+
+
+		function convertObjToBasicObject(obj,output_variable_name){
+		    var var_index = 0 ;
+		    function gen_new_name(type){
+		        var_index++;
+		        return "m_"+type+"_"+ var_index;
+		    }
+
+		    function isObject(obj){
+		        //reference http://stackoverflow.com/questions/13045419/javascript-is-there-an-isobject-function-like-isarray
+		        return (typeof obj == "object") && (obj !== null) ;
+		    }
+
+		    function isArray(obj){
+		        return obj.length !== null && obj.push != null && obj.slice != null;
+		    }
+
+		    function normalizedValue(str){
+		        return JSON.stringify(str);
+		    }
+
+		    function createArray(obj,handled,skipwrap){
+		        if(handled == null){
+		            handled = function(variable_name){
+		                return "result = "+variable_name+";";
+		            };
+		        }
+
+		        var out = [];
+		        if(!skipwrap){
+		        	out.push("{ "); //creating namespace
+		        }
+
+		        var _var_name = gen_new_name("array");
+		        out.push("List<Object> "+_var_name+" = new ArrayList<Object>();");
+		        for(var i=0;i<obj.length;++i){
+		            var item = obj[i];
+		            if(isObject(item)){
+		                if(isArray(item)){
+		                    out.push.apply(out,createArray(item,function(varname){
+		                        return (_var_name+".add("+varname+"); ");
+		                    }));
+		                }else{
+		                    out.push.apply(out,createObj(item,function(varname){
+		                        return (_var_name+".add("+varname+"); ");
+		                    }));
+		                }
+
+		            }else{
+		                out.push(_var_name+".add("+normalizedValue(item)+"); ");
+		            }
+		        }
+		        out.push("//------------");
+		        out.push(handled(_var_name));
+		        if(!skipwrap){
+		        	out.push("} "); //creating namespace
+		        }
+
+		        return out;
+		    }
+
+		    function createObj(obj,handled,skipwrap){
+		        var out = [];
+
+		        if(!skipwrap){
+		        	out.push("{ "); //creating namespace
+		        }
+
+		        var _var_name = gen_new_name("object");
+		        out.push("BasicDBObject "+_var_name+" = new BasicDBObject();");
+		        for(var k  in obj){
+		            if(isObject(obj[k])){
+		                if(isArray(obj[k])){
+		                    out.push.apply(out,createArray(obj[k],function(varname){
+		                        return (_var_name+".append(\""+k+"\","+varname+"); ");
+		                    }));
+		                }else{
+		                    out.push.apply(out,createObj(obj[k],function(varname){
+		                        return (_var_name+".append(\""+k+"\","+varname+"); ");
+		                    }));
+		                }
+
+		            }else{
+		                out.push(_var_name+".append(\""+k+"\","+normalizedValue(obj[k])+"); ");
+		            }
+		        }
+		        out.push("//------------");
+		        out.push(handled(_var_name));
+
+		        if(!skipwrap){
+		        	out.push("}");
+		        }
+		        return out;
+		    }
+
+		    if(isObject(obj)){
+		        return createObj(obj,function(variable_name){
+		            return "";
+		        },true).join("\n");
+		    }else if(isArray(obj)){
+		        return createArray(obj,function(variable_name){
+		            return "";
+		        },true).join("\n");
+		    }
+		};
+
+		$("#btn").click(function(){
+		    eval("window.item = "+$("#test").val());
+		    $("#output").val(convertObjToBasicObject(window.item));
+		});
+		</script>
+	</body>
+</html>
